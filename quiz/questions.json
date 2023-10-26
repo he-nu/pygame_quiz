@@ -1,0 +1,62 @@
+{
+    "easy": {
+        "1": {
+            "question": "some question 1 1",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        },
+        "2": {
+            "question": "some question 1 2",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        }
+    },
+    "medium": {
+        "1": {
+            "question": "some question 2 1",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        },
+        "2": {
+            "question": "some question 2 2",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        }
+    },
+    "hard": {
+        "1": {
+            "question": "some question 3 1",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        },
+        "2": {
+            "question": "some question 3 2",
+            "answerOptions": {
+                "A": "some",
+                "B": "some",
+                "C": "some"
+            },
+            "correctAnswer": "A"
+        }
+    }
+}
