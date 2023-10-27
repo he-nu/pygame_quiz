@@ -120,14 +120,24 @@
             "correctAnswer": "B"
         },
         "6": {
-            "dune": "Where do the olympic games originate?",
+            "olympics": "Where do the olympic games originate?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Greece",
                 "C": "Germany"
             },
             "correctAnswer": "B"
-        }
+        },
+        "7": {
+            "cave": "Where is worlds largest cave?",
+            "answerOptions": {
+                "A": "Finland",
+                "B": "Vientam",
+                "C": "Australia"
+            },
+            "correctAnswer": "B"
+        
+        
     },
     "hard": {
         "1": {
