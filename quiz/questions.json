@@ -1,7 +1,8 @@
 {
-    "easy": {
+    "easy": 
+    {
         "1": {
-            "coffee_question": "What country has the highest coffee consumption per capita?",
+            "question": "What country has the highest coffee consumption per capita?",
             "answerOptions": {
                 "A": "Brazil",
                 "B": "Finland",
@@ -10,7 +11,7 @@
             "correctAnswer": "B"
         },
         "2": {
-            "stabelness": "What country is the most stable in the world?",
+            "question": "What country is the most stable in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Germany",
@@ -19,7 +20,7 @@
             "correctAnswer": "A"
         },
         "3": {
-            "safety": "What is the safest country in the world?",
+            "question": "What is the safest country in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "New Zealand",
@@ -28,7 +29,7 @@
             "correctAnswer": "A"
         },
         "4": {
-            "organized_crime": "What country has the least organized crime in the world?",
+            "question": "What country has the least organized crime in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Italy",
@@ -37,7 +38,7 @@
             "correctAnswer": "A"
         },
         "5": {
-            "property_rights": "What country has the best protection of property rights in the world?",
+            "question": "What country has the best protection of property rights in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "United States",
@@ -46,7 +47,7 @@
             "correctAnswer": "A"
         },
         "6": {
-            "banks": "What country has the soundest banks in the world?",
+            "question": "What country has the soundest banks in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Switzerland",
@@ -55,7 +56,7 @@
             "correctAnswer": "A"
         },
         "7": {
-            "happiness": "What is the happiest country in the world?",
+            "question": "What is the happiest country in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Mexico",
@@ -64,7 +65,7 @@
             "correctAnswer": "A"
         },
         "8": {
-            "air_quality": "What country has the cleanest air quality in the world?",
+            "question": "What country has the cleanest air quality in the world?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Austria",
@@ -73,9 +74,10 @@
             "correctAnswer": "A"
         }
     },
-    "medium": {
+    "medium": 
+    {
         "1": {
-            "chess": "The game of chess was invented in which country?",
+            "question": "The game of chess was invented in which country?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "India",
@@ -84,7 +86,7 @@
             "correctAnswer": "B"
         },
         "2": {
-            "everest": "The highest mountain peak in the world is in which country?",
+            "question": "The highest mountain peak in the world is in which country?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Nepal",
@@ -93,7 +95,7 @@
             "correctAnswer": "B"
         },
         "3": {
-            "deep_lake": "The deepest lake in the world is located in which country?",
+            "question": "The deepest lake in the world is located in which country?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Russia",
@@ -102,7 +104,7 @@
             "correctAnswer": "B"
         },
         "4": {
-            "desert": "The worlds largest desert is located where in the world?",
+            "question": "The worlds largest desert is located where in the world?",
             "answerOptions": {
                 "A": "Europe",
                 "B": "Antarctica",
@@ -111,7 +113,7 @@
             "correctAnswer": "B"
         },
         "5": {
-            "dune": "Worlds largest sand dune is in which country?",
+            "question": "Worlds largest sand dune is in which country?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Peru",
@@ -120,7 +122,7 @@
             "correctAnswer": "B"
         },
         "6": {
-            "olympics": "Where do the olympic games originate?",
+            "question": "Where do the olympic games originate from?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Greece",
@@ -129,7 +131,7 @@
             "correctAnswer": "B"
         },
         "7": {
-            "cave": "Where is worlds largest cave?",
+            "question": "Where is the worlds largest cave?",
             "answerOptions": {
                 "A": "Finland",
                 "B": "Vientam",
@@ -137,26 +139,54 @@
             },
             "correctAnswer": "B"
         
-        
+        }
     },
-    "hard": {
+    "hard": 
+    {
         "1": {
-            "question": "some question 3 1",
+            "question": "What country has the most cyclists per capita?",
             "answerOptions": {
-                "A": "some",
-                "B": "some",
-                "C": "some"
+                "A": "Finland",
+                "B": "Netherlands",
+                "C": "China"
             },
-            "correctAnswer": "A"
+            "correctAnswer": "B"
         },
         "2": {
-            "question": "some question 3 2",
+            "question": "The worlds tallest building in which country?",
             "answerOptions": {
-                "A": "some",
-                "B": "some",
-                "C": "some"
+                "A": "Finland",
+                "B": "China",
+                "C": "Dubai"
             },
-            "correctAnswer": "A"
+            "correctAnswer": "B"
+        },
+        "3": {
+            "question": "The worlds largest dam in which country?",
+            "answerOptions": {
+                "A": "Finland",
+                "B": "Canada",
+                "C": "Pakistan"
+            },
+            "correctAnswer": "C"
+        },
+        "4": {
+            "question": "What country has the most lakes in the world?",
+            "answerOptions": {
+                "A": "Finland",
+                "B": "Canada",
+                "C": "Ethiopia"
+            },
+            "correctAnswer": "B"
+        },
+        "5": {
+            "question": "What country has the worlds largest active volcano?",
+            "answerOptions": {
+                "A": "Finland",
+                "B": "United States",
+                "C": "Italy"
+            },
+            "correctAnswer": "B"
         }
     }
 }
