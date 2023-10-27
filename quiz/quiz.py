@@ -1,6 +1,7 @@
 import pygame as pg
 import json
 import time
+
 pg.init()
 
 SCREEN_SIZE = (800, 800)
@@ -67,7 +68,7 @@ class Area:
 
 
 class Button(Area):
-    def __init__(self, x, y, width: int, height: int):
+    def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__(x, y, width, height)
 
     def was_pressed(self, mouse_pos: tuple):
@@ -77,7 +78,7 @@ class Button(Area):
 
 
 class Text(Area):
-    def __init__(self, x, y, width: int, height: int):
+    def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__(x, y, width, height)
         self.lines = None
         self.line_height = None
@@ -255,8 +256,8 @@ def menu(screen):
 
 
 def game(screen):
-    dark_gray = (50, 50, 50)
-    screen.fill(dark_gray)
+    black = (0, 0, 0)
+    screen.fill(black)
 
     neon_green = (57, 255, 20)
     dark_green = (0, 100, 0)
@@ -277,40 +278,28 @@ def game(screen):
     middle_button.set_text("B")
     right_button.set_text("C")
 
-    # bottom left corner
     left_button.set_pos(SCREEN_SIZE[0] / 3 - 220,
                         SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
-    # bottom middle corner
     middle_button.set_pos(
         SCREEN_SIZE[0] / 2 - 100, SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
     right_button.set_pos(SCREEN_SIZE[0] - (SCREEN_SIZE[0] / 3) + 20,
-                         SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)  # bottom right corner
+                         SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
 
     question_text_area = Text(0, 0, 700, 250)
-    question_text_area.set_color_inside(dark_gray)
+    question_text_area.set_color_inside(black)
     question_text_area.set_border(30, neon_green)
     question_text_area.set_pos(
         SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 375)
 
     question_option_area = Text(0, 0, 700, 250)
-    question_option_area.set_color_inside(dark_gray)
+    question_option_area.set_color_inside(black)
     question_option_area.set_border(30, neon_green)
     question_option_area.set_pos(
         SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 75)
     question_option_area.set_text_pos(75, 65)
 
-    """
-        Implement the logic of the game here
-        Initial idea:
-            - Get the question from the json file
-            - Display the question
-            - Display the answers
-            - Check if the user clicked on the right answer
-            - If the user clicked on the right answer, display the next question
-            - If the user clicked on the wrong answer, display the game over screen
-    """
-
     questions_generator = get_next_question()
+
     wrong_answers = 0
 
     while True:
@@ -444,31 +433,29 @@ def lose():
     screen.blit(text, text_rect)
     pg.display.update()
     time.sleep(2)
-    exit()
+    main()
 
 
 def win(screen):
     screen.fill((0, 0, 0))
-    text = FONT_48.render("You won!", True, (57, 255, 20))
+    text = FONT_48.render("You wín!", True, (57, 255, 20))
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
     screen.blit(text, text_rect)
     pg.display.update()
     time.sleep(2)
-    exit()
+    main()
 
 
 def main():
-    """
-        Game parts added to a list in order of execution
-        a new screen is created for each part to clear the previous screen
-    """
-    parts = [intro, menu, game]
-    pg.init()
-    for part in parts:
+    first = True
+    while True:
+        pg.display.set_caption("Quiz")
         screen = pg.display.set_mode(SCREEN_SIZE)
-        part(screen)
-        pg.display.update()
+        # pg.display.set_icon(pg.image.load("icon.png"))
+        intro(screen) if first else None
+        menu(screen)
+        first = False
 
 
 if __name__ == "__main__":
