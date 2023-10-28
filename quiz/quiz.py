@@ -6,6 +6,7 @@ pg.init()
 
 SCREEN_SIZE = (800, 800)
 FONT_16 = pg.font.Font("PressStart2P-Regular.ttf", 16)
+FONT_32 = pg.font.Font("PressStart2P-Regular.ttf", 32)
 FONT_48 = pg.font.Font("PressStart2P-Regular.ttf", 48)
 
 Q_PATH = open("questions.json", "r")
@@ -29,11 +30,33 @@ def get_next_question():
             yield (QUESTIONS[level][question]["question"], QUESTIONS[level][question]["answerOptions"], QUESTIONS[level][question]["correctAnswer"])
 
 
+def wrap(x, limit):
+    output = []
+    sentence = ""
+
+    for word in x.split():
+        if len(sentence) + len(word) > limit:
+            output.append(sentence)
+            sentence = ""
+        sentence += word + " "
+
+    output.append(sentence)
+
+    # pad to make all equal length, smaller will be padded equally from both sides
+    max_len = max([len(line) for line in output])
+    for i in range(len(output)):
+        if len(output[i]) < max_len:
+            output[i] = output[i].center(max_len)
+    return output
+
+
 class Area:
     def __init__(self, x: int, y: int, width: int, height: int):
         self.rect = pg.Rect(x, y, width, height)
         self.text = None
         self.font = FONT_16
+        self.width = width
+        self.height = height
 
     def set_font(self, font):
         self.font = font
@@ -99,15 +122,15 @@ class Text(Area):
             for i, line in enumerate(self.lines):
                 text_surface = self.font.render(line, True, self.border_color)
                 text_rect = text_surface.get_rect()
-                text_rect.center = self.text_pos[0], self.text_pos[1] + (
-                    i * self.line_height)
+                text_rect.x = self.text_pos[0]
+                text_rect.y = self.text_pos[1] + i * self.line_height
                 screen.blit(text_surface, text_rect)
 
     def draw(self, screen):
         if self.lines:
             self._multi_line_draw(screen)
         else:
-            return super().draw(screen)
+            super().draw(screen)
 
     def set_pos(self, x: int, y: int):
         self.rect.x = x
@@ -131,7 +154,7 @@ def options(screen):
         text_area.set_border(30, (57, 255, 20))
         text_area.set_pos(SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 375)
         text_area.set_text(["Options"], 60)
-        text_area.set_text_pos(350, 125)
+        text_area.set_text_pos(200, 85)
 
         max_wrong_answers = Text(0, 0, 700, 250)
         max_wrong_answers.set_color_inside((0, 0, 0))
@@ -140,7 +163,7 @@ def options(screen):
             SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 75)
         max_wrong_answers.set_text(
             [f"Max wrong answers: (Current setting: {WRONG_LIMIT})"], 60)
-        max_wrong_answers.set_text_pos(350, 65)
+        max_wrong_answers.set_text_pos(35, 65)
 
         one_wrong = Button(0, 0, 100, 50)
         one_wrong.set_color_inside((0, 100, 0))
@@ -286,10 +309,12 @@ def game(screen):
                          SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
 
     question_text_area = Text(0, 0, 700, 250)
+    question_text_area.set_font(FONT_32)
     question_text_area.set_color_inside(black)
     question_text_area.set_border(30, neon_green)
     question_text_area.set_pos(
         SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 375)
+    question_text_area.set_text_pos(35, 50)
 
     question_option_area = Text(0, 0, 700, 250)
     question_option_area.set_color_inside(black)
@@ -309,9 +334,9 @@ def game(screen):
             tup = next(questions_generator)
             quest, ans, correct_ans = tup
         except StopIteration:
-            win(screen)
+            win()
 
-        question_text_area.set_one_line_text(quest)
+        question_text_area.set_text(wrap(quest, 20), 38)
 
         text_lines = [
             f'A: {ans["A"]}',
@@ -358,7 +383,7 @@ def game(screen):
                         left_button.draw(screen)
                         pg.display.update()
                         pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
+                        question_text_area.set_text([quest], 60)
                         left_button.set_color_inside(dark_green)
                         left_button.draw(screen)
                         pg.display.update()
@@ -387,8 +412,7 @@ def game(screen):
                         middle_button.draw(screen)
                         pg.display.update()
                         pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
-                        question_text_area.draw(screen)
+                        question_text_area.set_text([quest], 60)
                         middle_button.set_color_inside(dark_green)
                         middle_button.draw(screen)
                         pg.display.update()
@@ -417,8 +441,7 @@ def game(screen):
                         right_button.draw(screen)
                         pg.display.update()
                         pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
-                        question_text_area.draw(screen)
+                        question_text_area.set_text([quest], 60)
                         right_button.set_color_inside(dark_green)
                         right_button.draw(screen)
                         pg.display.update()
@@ -436,7 +459,8 @@ def lose():
     main()
 
 
-def win(screen):
+def win():
+    screen = pg.display.set_mode(SCREEN_SIZE)
     screen.fill((0, 0, 0))
     text = FONT_48.render("You wín!", True, (57, 255, 20))
     text_rect = text.get_rect()
