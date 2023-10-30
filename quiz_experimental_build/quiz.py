@@ -1,6 +1,9 @@
-import pygame as pg
 import json
 import time
+
+import pygame as pg
+
+import sound_effects as se
 
 pg.init()
 
@@ -375,6 +378,8 @@ def game(screen):
                     pg.display.flip()
                     pg.time.delay(100)
                     if correct_ans == "A":
+                        se.right_answer_sound.play()
+                        time.sleep(2)
                         print("Correct answer")
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
@@ -385,6 +390,8 @@ def game(screen):
                         pg.time.delay(850)
                         break  # Exit the loop when the correct answer is selected
                     else:
+                        se.wrong_answer_sound.play()
+                        time.sleep(2)
                         print("Wrong answer")
                         wrong_answers += 1
                         question_text_area.set_one_line_text("Wrong answer!!")
@@ -404,6 +411,8 @@ def game(screen):
                     pg.display.flip()
                     pg.time.delay(100)
                     if correct_ans == "B":
+                        se.right_answer_sound.play()
+                        time.sleep(2)
                         print("Correct answer")
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
@@ -414,6 +423,8 @@ def game(screen):
                         pg.time.delay(850)
                         break  # Exit the loop when the correct answer is selected
                     else:
+                        se.wrong_answer_sound.play()
+                        time.sleep(2)
                         print("Wrong answer")
                         wrong_answers += 1
                         question_text_area.set_one_line_text("Wrong answer!!")
@@ -433,6 +444,8 @@ def game(screen):
                     pg.display.flip()
                     pg.time.delay(100)
                     if correct_ans == "C":
+                        se.right_answer_sound.play()
+                        time.sleep(2)
                         print("Correct answer")
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
@@ -443,6 +456,8 @@ def game(screen):
                         pg.time.delay(850)
                         break  # Exit the loop when the correct answer is selected
                     else:
+                        se.wrong_answer_sound.play()
+                        time.sleep(2)
                         print("Wrong answer")
                         wrong_answers += 1
                         question_text_area.set_one_line_text("Wrong answer!!")

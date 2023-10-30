@@ -113,6 +113,8 @@ class Text(Area):
         self.line_height = line_height
 
     def set_one_line_text(self, text: str):
+        if self.lines:
+            self.lines = [text]
         self.text = text
 
     def _multi_line_draw(self, screen):
