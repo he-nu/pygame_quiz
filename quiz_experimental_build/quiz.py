@@ -34,7 +34,6 @@ def get_next_question():
             yield (QUESTIONS[level][question]["question"], QUESTIONS[level][question]["answerOptions"], QUESTIONS[level][question]["correctAnswer"])
 
 
-
 def shuffle_answers(current_question:tuple) -> tuple:
     """ Takes the current question and shuffles 
     the order of the answers.
@@ -58,9 +57,6 @@ def shuffle_answers(current_question:tuple) -> tuple:
     position = val_list.index(correct_value)
     new_correct = key_list[position]
     return (current_question[0], shuffled_answers_dict, new_correct)
-
-
-
 
 
 def wrap(a_string, limit):

@@ -56,7 +56,7 @@ def shuffle_answers(current_question: tuple) -> tuple:
     val_list = list(shuffled_answers_dict.values())
     position = val_list.index(correct_value)
     new_correct = key_list[position]
-    return (current_question[0], shuffled_answers_dict, new_correct)
+    return current_question[0], shuffled_answers_dict, new_correct
 
 
 def wrap(a_string, limit):
@@ -437,6 +437,9 @@ def game(screen):
                     pg.time.delay(150)
                     if correct_ans == "A":
                         print("Correct answer")
+
+                        right_answers += 1
+
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
                         question_text_area.draw(screen)
@@ -448,6 +451,7 @@ def game(screen):
                         break  # Exit the loop when the correct answer is selected
                     else:
                         print("Wrong answer")
+                        
                         wrong_answers += 1
                         question_text_area.set_one_line_text("Wrong answer!!")
                         question_text_area.draw(screen)
@@ -468,6 +472,9 @@ def game(screen):
                     pg.time.delay(150)
                     if correct_ans == "B":
                         print("Correct answer")
+
+                        right_answers += 1
+
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
                         question_text_area.draw(screen)
@@ -499,6 +506,9 @@ def game(screen):
                     pg.time.delay(150)
                     if correct_ans == "C":
                         print("Correct answer")
+
+                        right_answers += 1
+
                         question_text_area.set_one_line_text(
                             "Correct answer!!")
                         question_text_area.draw(screen)
