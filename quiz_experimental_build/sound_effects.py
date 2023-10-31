@@ -4,13 +4,14 @@ import time
 
 pg.mixer.init()
 
-right_answer_sound = pg.mixer.Sound("virgil.mp3")
-wrong_answer_sound = pg.mixer.Sound("vrong.mp3")
-level_up_sound = pg.mixer.Sound("powerup.mp3")
+right_answer_sound = pg.mixer.Sound("sounds/virgil.mp3")
+wrong_answer_sound = pg.mixer.Sound("sounds/vrong.mp3")
+level_up_sound = pg.mixer.Sound("sounds/powerup.mp3")
+pg.mixer.music.load("sounds/finlandia.mp3")
 
 
 if __name__ == "__main__":
-    level_up_sound.play()
-    time.sleep(2)
+    pg.mixer.music.play()
+    time.sleep(8)
 
     

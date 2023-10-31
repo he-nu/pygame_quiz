@@ -3,10 +3,12 @@ import time
 import random
 
 import pygame as pg
+from pygame import mixer
 
 import sound_effects as se
 
 pg.init()
+mixer.init()
 
 SCREEN_SIZE = (800, 800)
 FONT_16 = pg.font.Font("PressStart2P-Regular.ttf", 16)
@@ -18,6 +20,8 @@ QUESTIONS = json.load(Q_PATH)
 
 
 WRONG_LIMIT = 1
+
+
 
 
 def get_next_question():
@@ -59,6 +63,12 @@ def shuffle_answers(current_question: tuple) -> tuple:
     return current_question[0], shuffled_answers_dict, new_correct
 
 
+def music_dj():
+    songs = ["sounds/pokemon.mp3"]
+    for song in songs:
+        yield song
+
+
 def set_level(current_level, current_score):
     level = current_level
 
@@ -68,6 +78,11 @@ def set_level(current_level, current_score):
         level = 3
 
     if level > current_level:
+        song = music_dj()
+
+        mixer.music.unload()
+        mixer.music.load(next(song))
+        mixer.music.play()
         se.level_up_sound.play()
         time.sleep(2)
 
@@ -331,6 +346,9 @@ def menu(screen):
 
 
 def game(screen):
+
+    mixer.music.load("sounds/finlandia.mp3")
+    mixer.music.play()
     black = (0, 0, 0)
     wrong_answers = 0
     lives = WRONG_LIMIT
@@ -399,6 +417,9 @@ def game(screen):
     correct_answers_text.set_pos(400, 15)
 
     questions_generator = get_next_question()
+
+
+
 
     while True:
         screen.fill(black)
