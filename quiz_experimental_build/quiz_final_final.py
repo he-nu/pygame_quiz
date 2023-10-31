@@ -392,7 +392,7 @@ def game(screen):
 
         try:
             tup = next(questions_generator)
-            quest, ans, correct_ans = tup
+            quest, ans, correct_ans = shuffle_answers(tup)
         except StopIteration:
             win()
 
