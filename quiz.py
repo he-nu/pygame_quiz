@@ -1,11 +1,16 @@
-import pygame as pg
 import json
 import time
+import random
+
+import pygame as pg
+
+import sound_effects as se
 
 pg.init()
 
 SCREEN_SIZE = (800, 800)
 FONT_16 = pg.font.Font("PressStart2P-Regular.ttf", 16)
+FONT_32 = pg.font.Font("PressStart2P-Regular.ttf", 32)
 FONT_48 = pg.font.Font("PressStart2P-Regular.ttf", 48)
 
 Q_PATH = open("questions.json", "r")
@@ -29,11 +34,58 @@ def get_next_question():
             yield (QUESTIONS[level][question]["question"], QUESTIONS[level][question]["answerOptions"], QUESTIONS[level][question]["correctAnswer"])
 
 
+def shuffle_answers(current_question: tuple) -> tuple:
+    """ Takes the current question and shuffles 
+    the order of the answers.
+
+    Input: Current answer from get next question tuple
+    output: Answers shuffled: tuple
+    """
+    answer_structure: dict = current_question[1]
+    correct_answer = current_question[-1]
+    correct_value = answer_structure[correct_answer]
+    possible_answers = [i for i in answer_structure.values()]
+    shuffled_answers = possible_answers.copy()
+    random.shuffle(shuffled_answers)
+    # print(shuffled_answers)
+    answer_keys = ['A', 'B', 'C']
+    shuffled_answers_dict = {}
+    for i, k in enumerate(answer_keys):
+        shuffled_answers_dict[k] = shuffled_answers[i]
+    key_list = list(shuffled_answers_dict.keys())
+    val_list = list(shuffled_answers_dict.values())
+    position = val_list.index(correct_value)
+    new_correct = key_list[position]
+    return (current_question[0], shuffled_answers_dict, new_correct)
+
+
+def wrap(a_string, limit):
+    output = []
+    sentence = ""
+
+    for word in a_string.split():
+        if len(sentence) + len(word) > limit:
+            output.append(sentence)
+            sentence = ""
+        sentence += word + " "
+
+    output.append(sentence)
+
+    # pad to make all equal length, smaller will be padded equally from both sides
+    max_len = max([len(line) for line in output])
+    for i in range(len(output)):
+        if len(output[i]) < max_len:
+            output[i] = output[i].center(max_len)
+    return output
+
+
 class Area:
     def __init__(self, x: int, y: int, width: int, height: int):
         self.rect = pg.Rect(x, y, width, height)
         self.text = None
         self.font = FONT_16
+        self.width = width
+        self.height = height
 
     def set_font(self, font):
         self.font = font
@@ -80,16 +132,24 @@ class Button(Area):
 class Text(Area):
     def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__(x, y, width, height)
+        self.clear_text()
         self.lines = None
         self.line_height = None
         self.text_pos = None
         self.font = FONT_16
+
+    def clear_text(self):
+        self.lines = None
+        self.line_height = None
+        self.text_pos = None
 
     def set_text(self, lines: list['str'], line_height: int):
         self.lines = lines
         self.line_height = line_height
 
     def set_one_line_text(self, text: str):
+        if self.lines:
+            self.lines = [text]
         self.text = text
 
     def _multi_line_draw(self, screen):
@@ -99,15 +159,15 @@ class Text(Area):
             for i, line in enumerate(self.lines):
                 text_surface = self.font.render(line, True, self.border_color)
                 text_rect = text_surface.get_rect()
-                text_rect.center = self.text_pos[0], self.text_pos[1] + (
-                    i * self.line_height)
+                text_rect.x = self.text_pos[0]
+                text_rect.y = self.text_pos[1] + i * self.line_height
                 screen.blit(text_surface, text_rect)
 
     def draw(self, screen):
         if self.lines:
             self._multi_line_draw(screen)
         else:
-            return super().draw(screen)
+            super().draw(screen)
 
     def set_pos(self, x: int, y: int):
         self.rect.x = x
@@ -131,7 +191,7 @@ def options(screen):
         text_area.set_border(30, (57, 255, 20))
         text_area.set_pos(SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 375)
         text_area.set_text(["Options"], 60)
-        text_area.set_text_pos(350, 125)
+        text_area.set_text_pos(200, 85)
 
         max_wrong_answers = Text(0, 0, 700, 250)
         max_wrong_answers.set_color_inside((0, 0, 0))
@@ -140,7 +200,7 @@ def options(screen):
             SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 75)
         max_wrong_answers.set_text(
             [f"Max wrong answers: (Current setting: {WRONG_LIMIT})"], 60)
-        max_wrong_answers.set_text_pos(350, 65)
+        max_wrong_answers.set_text_pos(35, 65)
 
         one_wrong = Button(0, 0, 100, 50)
         one_wrong.set_color_inside((0, 100, 0))
@@ -165,7 +225,7 @@ def options(screen):
         two_wrong.draw(screen)
         exit_button.draw(screen)
 
-        pg.display.update()
+        pg.display.flip()
 
         if pg.event.get(pg.QUIT):
             pg.quit()
@@ -180,7 +240,7 @@ def options(screen):
                 max_wrong_answers.draw(screen)
                 one_wrong.set_color_inside((0, 255, 0))
                 one_wrong.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(350)
 
             if two_wrong.was_pressed(mouse_pos):
@@ -192,13 +252,13 @@ def options(screen):
                 max_wrong_answers.draw(screen)
                 two_wrong.set_color_inside((0, 255, 0))
                 two_wrong.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(350)
 
             if exit_button.was_pressed(mouse_pos):
                 exit_button.set_color_inside((0, 255, 0))
                 exit_button.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(250)
                 break
 
@@ -225,7 +285,7 @@ def menu(screen):
     start_button.draw(screen)
     quit_button.draw(screen)
     options_button.draw(screen)
-    pg.display.update()
+    pg.display.flip()
     while True:
         if pg.event.get(pg.QUIT):
             pg.quit()
@@ -235,19 +295,19 @@ def menu(screen):
             if start_button.was_pressed(mouse_pos):
                 start_button.set_color_inside((0, 255, 0))
                 start_button.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(250)
                 game(screen)
             if quit_button.was_pressed(mouse_pos):
                 quit_button.set_color_inside((0, 255, 0))
                 quit_button.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(250)
                 pg.quit()
                 exit()
             if options_button.was_pressed(mouse_pos):
                 options_button.draw(screen)
-                pg.display.update()
+                pg.display.flip()
                 pg.time.delay(250)
                 screen = pg.display.set_mode(SCREEN_SIZE)
                 options(screen)
@@ -257,6 +317,10 @@ def menu(screen):
 
 def game(screen):
     black = (0, 0, 0)
+    wrong_answers = 0
+    lives = WRONG_LIMIT
+    right_answers = 0
+    current_question = 0
     screen.fill(black)
 
     neon_green = (57, 255, 20)
@@ -278,40 +342,72 @@ def game(screen):
     middle_button.set_text("B")
     right_button.set_text("C")
 
-    left_button.set_pos(SCREEN_SIZE[0] / 3 - 220,
-                        SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
+    left_button.set_pos(SCREEN_SIZE[0] / 3 - 216,
+                        SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 110)
     middle_button.set_pos(
-        SCREEN_SIZE[0] / 2 - 100, SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
-    right_button.set_pos(SCREEN_SIZE[0] - (SCREEN_SIZE[0] / 3) + 20,
-                         SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 100)
+        SCREEN_SIZE[0] / 2 - 100, SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 110)
+    right_button.set_pos(SCREEN_SIZE[0] - (SCREEN_SIZE[0] / 3) + 15,
+                         SCREEN_SIZE[0] - SCREEN_SIZE[1] / 3 + 110)
 
     question_text_area = Text(0, 0, 700, 250)
+    question_text_area.set_font(FONT_32)
     question_text_area.set_color_inside(black)
     question_text_area.set_border(30, neon_green)
     question_text_area.set_pos(
-        SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 375)
+        SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 320)
+    question_text_area.set_text_pos(35, 50)
 
     question_option_area = Text(0, 0, 700, 250)
     question_option_area.set_color_inside(black)
     question_option_area.set_border(30, neon_green)
     question_option_area.set_pos(
-        SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 75)
+        SCREEN_SIZE[0] / 2 - 350, SCREEN_SIZE[1] / 2 - 45)
     question_option_area.set_text_pos(75, 65)
+
+    # lives_text = Text(SCREEN_SIZE[0] - 200, 80, 200, 50)
+    # lives_text.set_font(FONT_32)
+    # lives_text.set_color_inside(black)
+    # lives_text.set_border(30, neon_green)
+    # lives_text.set_pos(0, 0)
+
+    question_number_text = Text(SCREEN_SIZE[0] - 200, 20, 200, 50)
+    question_number_text.set_font(FONT_16)
+    question_number_text.set_color_inside(black)
+    question_number_text.set_border(30, neon_green)
+    question_number_text.set_pos(50, 15)
+
+    correct_answers_text = Text(SCREEN_SIZE[0] - 200, 140, 350, 50)
+    correct_answers_text.set_font(FONT_16)
+    correct_answers_text.set_color_inside(black)
+    correct_answers_text.set_border(0, neon_green)
+    correct_answers_text.set_pos(400, 15)
 
     questions_generator = get_next_question()
 
-    wrong_answers = 0
-
     while True:
+        screen.fill(black)
         if wrong_answers == WRONG_LIMIT:
             lose()
+        current_question += 1
+
         try:
             tup = next(questions_generator)
             quest, ans, correct_ans = tup
         except StopIteration:
             win()
 
-        question_text_area.set_one_line_text(quest)
+        question_number_text.set_one_line_text(
+            f"Question: {current_question}")
+        question_number_text.draw(screen)
+
+        # lives_text.set_text(f"Lives: {lives}", 40)
+        # lives_text.draw(screen)
+
+        correct_answers_text.set_one_line_text(
+            f"Right:{right_answers} | Wrong:{wrong_answers}")
+        correct_answers_text.draw(screen)
+
+        question_text_area.set_text(wrap(quest, 20), 38)
 
         text_lines = [
             f'A: {ans["A"]}',
@@ -324,7 +420,7 @@ def game(screen):
         left_button.draw(screen)
         middle_button.draw(screen)
         right_button.draw(screen)
-        pg.display.update()
+        pg.display.flip()
 
         while wrong_answers < WRONG_LIMIT:
             if pg.event.get(pg.QUIT):
@@ -337,8 +433,8 @@ def game(screen):
                 if left_button.was_pressed(mouse_pos):
                     left_button.set_color_inside((0, 255, 0))
                     left_button.draw(screen)
-                    pg.display.update()
-                    pg.time.delay(100)
+                    pg.display.flip()
+                    pg.time.delay(150)
                     if correct_ans == "A":
                         print("Correct answer")
                         question_text_area.set_one_line_text(
@@ -346,8 +442,9 @@ def game(screen):
                         question_text_area.draw(screen)
                         left_button.set_color_inside(dark_green)
                         left_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
+                        pg.display.flip()
+                        se.right_answer_sound.play()
+                        pg.time.delay(1500)
                         break  # Exit the loop when the correct answer is selected
                     else:
                         print("Wrong answer")
@@ -356,18 +453,19 @@ def game(screen):
                         question_text_area.draw(screen)
                         left_button.set_color_inside((255, 0, 0))
                         left_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
+                        pg.display.flip()
+                        se.wrong_answer_sound.play()
+                        pg.time.delay(1500)
+                        question_text_area.set_text([quest], 60)
                         left_button.set_color_inside(dark_green)
                         left_button.draw(screen)
-                        pg.display.update()
+                        pg.display.flip()
 
                 if middle_button.was_pressed(mouse_pos):
                     middle_button.set_color_inside((0, 255, 0))
                     middle_button.draw(screen)
-                    pg.display.update()
-                    pg.time.delay(100)
+                    pg.display.flip()
+                    pg.time.delay(150)
                     if correct_ans == "B":
                         print("Correct answer")
                         question_text_area.set_one_line_text(
@@ -375,8 +473,9 @@ def game(screen):
                         question_text_area.draw(screen)
                         middle_button.set_color_inside(dark_green)
                         middle_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
+                        pg.display.flip()
+                        se.right_answer_sound.play()
+                        pg.time.delay(1500)
                         break  # Exit the loop when the correct answer is selected
                     else:
                         print("Wrong answer")
@@ -385,19 +484,19 @@ def game(screen):
                         question_text_area.draw(screen)
                         middle_button.set_color_inside((255, 0, 0))
                         middle_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
-                        question_text_area.draw(screen)
+                        pg.display.flip()
+                        se.wrong_answer_sound.play()
+                        pg.time.delay(1500)
+                        question_text_area.set_text([quest], 60)
                         middle_button.set_color_inside(dark_green)
                         middle_button.draw(screen)
-                        pg.display.update()
+                        pg.display.flip()
 
                 if right_button.was_pressed(mouse_pos):
                     right_button.set_color_inside((0, 255, 0))
                     right_button.draw(screen)
-                    pg.display.update()
-                    pg.time.delay(100)
+                    pg.display.flip()
+                    pg.time.delay(150)
                     if correct_ans == "C":
                         print("Correct answer")
                         question_text_area.set_one_line_text(
@@ -405,8 +504,9 @@ def game(screen):
                         question_text_area.draw(screen)
                         right_button.set_color_inside(dark_green)
                         right_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
+                        pg.display.flip()
+                        se.right_answer_sound.play()
+                        pg.time.delay(1500)
                         break  # Exit the loop when the correct answer is selected
                     else:
                         print("Wrong answer")
@@ -415,13 +515,13 @@ def game(screen):
                         question_text_area.draw(screen)
                         right_button.set_color_inside((255, 0, 0))
                         right_button.draw(screen)
-                        pg.display.update()
-                        pg.time.delay(850)
-                        question_text_area.set_one_line_text(quest)
-                        question_text_area.draw(screen)
+                        pg.display.flip()
+                        se.wrong_answer_sound.play()
+                        pg.time.delay(1500)
+                        question_text_area.set_text([quest], 60)
                         right_button.set_color_inside(dark_green)
                         right_button.draw(screen)
-                        pg.display.update()
+                        pg.display.flip()
 
 
 def lose():
@@ -431,7 +531,7 @@ def lose():
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
     screen.blit(text, text_rect)
-    pg.display.update()
+    pg.display.flip()
     time.sleep(2)
     main()
 
@@ -443,7 +543,7 @@ def win():
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
     screen.blit(text, text_rect)
-    pg.display.update()
+    pg.display.flip()
     time.sleep(2)
     main()
 
