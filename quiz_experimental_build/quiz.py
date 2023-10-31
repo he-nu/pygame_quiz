@@ -1,5 +1,6 @@
 import json
 import time
+import random
 
 import pygame as pg
 
@@ -31,6 +32,35 @@ def get_next_question():
     for level in QUESTIONS:
         for question in QUESTIONS[level]:
             yield (QUESTIONS[level][question]["question"], QUESTIONS[level][question]["answerOptions"], QUESTIONS[level][question]["correctAnswer"])
+
+
+
+def shuffle_answers(current_question:tuple) -> tuple:
+    """ Takes the current question and shuffles 
+    the order of the answers.
+
+    Input: Current answer from get next question tuple
+    output: Answers shuffled: tuple
+    """
+    answer_structure:dict = current_question[1]
+    correct_answer = current_question[-1]
+    correct_value = answer_structure[correct_answer]
+    possible_answers = [i for i in answer_structure.values()]
+    shuffled_answers = possible_answers.copy()
+    random.shuffle(shuffled_answers)
+    # print(shuffled_answers)
+    answer_keys = ['A', 'B', 'C']
+    shuffled_answers_dict = {}
+    for i, k in enumerate(answer_keys):
+        shuffled_answers_dict[k] = shuffled_answers[i]
+    key_list = list(shuffled_answers_dict.keys())
+    val_list = list(shuffled_answers_dict.values())
+    position = val_list.index(correct_value)
+    new_correct = key_list[position]
+    return (current_question[0], shuffled_answers_dict, new_correct)
+
+
+
 
 
 def wrap(a_string, limit):
@@ -345,7 +375,7 @@ def game(screen):
             lose()
         try:
             tup = next(questions_generator)
-            quest, ans, correct_ans = tup
+            quest, ans, correct_ans = shuffle_answers(tup)
         except StopIteration:
             win()
 
