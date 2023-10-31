@@ -256,7 +256,7 @@ def options(screen):
         exit_button = Button(0, 0, 200, 100)
         exit_button.set_color_inside((0, 100, 0))
         exit_button.set_border(30, (57, 255, 20))
-        exit_button.set_text("Exit")
+        exit_button.set_text("Back")
         exit_button.set_pos(SCREEN_SIZE[0] / 2 - 100, SCREEN_SIZE[1] / 2 + 250)
         text_area.draw(screen)
         max_wrong_answers.draw(screen)
