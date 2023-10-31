@@ -64,10 +64,9 @@ def shuffle_answers(current_question: tuple) -> tuple:
 
 
 def music_dj():
-    songs = ["sounds/pokemon.mp3"]
+    songs = ["sounds/pokemon.mp3", "sounds/huoratron.mp3"]
     for song in songs:
         yield song
-
 
 def set_level(current_level, current_score):
     level = current_level
@@ -78,11 +77,7 @@ def set_level(current_level, current_score):
         level = 3
 
     if level > current_level:
-        song = music_dj()
 
-        mixer.music.unload()
-        mixer.music.load(next(song))
-        mixer.music.play()
         se.level_up_sound.play()
         time.sleep(2)
 
@@ -155,6 +150,7 @@ class Button(Area):
 
     def was_pressed(self, mouse_pos: tuple):
         if self.rect.collidepoint(mouse_pos):
+            se.button_sound.play()
             return True
         return False
 
@@ -247,7 +243,7 @@ def options(screen):
         exit_button = Button(0, 0, 200, 100)
         exit_button.set_color_inside((0, 100, 0))
         exit_button.set_border(30, (57, 255, 20))
-        exit_button.set_text("Exit")
+        exit_button.set_text("Back")
         exit_button.set_pos(SCREEN_SIZE[0] / 2 - 100, SCREEN_SIZE[1] / 2 + 250)
         text_area.draw(screen)
         max_wrong_answers.draw(screen)
@@ -347,6 +343,8 @@ def menu(screen):
 
 def game(screen):
 
+    song = music_dj()
+
     mixer.music.load("sounds/finlandia.mp3")
     mixer.music.play()
     black = (0, 0, 0)
@@ -422,6 +420,7 @@ def game(screen):
 
 
     while True:
+
         screen.fill(black)
         if wrong_answers == WRONG_LIMIT:
             lose()
@@ -569,7 +568,14 @@ def game(screen):
                         right_button.set_color_inside(dark_green)
                         right_button.draw(screen)
                         pg.display.flip()
+            previous_level = level
             level = set_level(current_level=level, current_score=right_answers)
+
+            if previous_level < level:
+                mixer.music.unload()
+                mixer.music.load(next(song))
+                mixer.music.play()
+
 
 def lose():
     screen = pg.display.set_mode(SCREEN_SIZE)
@@ -584,6 +590,8 @@ def lose():
 
 
 def win():
+    mixer.music.fadeout()
+    se.win_sound.play()
     screen = pg.display.set_mode(SCREEN_SIZE)
     screen.fill((0, 0, 0))
     text = FONT_48.render("You wín!", True, (57, 255, 20))
@@ -591,7 +599,7 @@ def win():
     text_rect.center = (SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
     screen.blit(text, text_rect)
     pg.display.flip()
-    time.sleep(2)
+    time.sleep(4)
     main()
 
 
