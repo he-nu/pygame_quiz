@@ -59,6 +59,21 @@ def shuffle_answers(current_question: tuple) -> tuple:
     return current_question[0], shuffled_answers_dict, new_correct
 
 
+def set_level(current_level, current_score):
+    level = current_level
+
+    if current_score == 8:
+        level = 2
+    elif current_score == 15:
+        level = 3
+
+    if level > current_level:
+        se.level_up_sound.play()
+        time.sleep(2)
+
+    return level
+
+
 def wrap(a_string, limit):
     output = []
     sentence = ""
@@ -322,6 +337,7 @@ def game(screen):
     right_answers = 0
     current_question = 0
     screen.fill(black)
+    level = 1
 
     neon_green = (57, 255, 20)
     dark_green = (0, 100, 0)
@@ -532,7 +548,8 @@ def game(screen):
                         right_button.set_color_inside(dark_green)
                         right_button.draw(screen)
                         pg.display.flip()
-
+            level = set_level(current_level=level, current_score=right_answers)
+            print(level)
 
 def lose():
     screen = pg.display.set_mode(SCREEN_SIZE)
