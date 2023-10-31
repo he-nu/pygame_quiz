@@ -290,6 +290,7 @@ def options(screen):
 
 
 def menu(screen):
+    mixer.music.load("sounds/zelda.mp3")
     start_button = Button(0, 0, 200, 100)
     start_button.set_color_inside((0, 100, 0))
     start_button.set_border(30, (57, 255, 20))
