@@ -549,7 +549,6 @@ def game(screen):
                         right_button.draw(screen)
                         pg.display.flip()
             level = set_level(current_level=level, current_score=right_answers)
-            print(level)
 
 def lose():
     screen = pg.display.set_mode(SCREEN_SIZE)
