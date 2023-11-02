@@ -3,7 +3,7 @@ Quiz game for python3.10
 
 Install requirements:
 
-    pip install -r requirements.txt
+    $ python3.10 -m pip install -r requirements.txt
 
 Run game:
 
